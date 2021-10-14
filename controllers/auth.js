@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const CryptoJS = require('crypto-js');
 const jwt = require('jsonwebtoken');
+const expiry = Number(process.env.JWT_EXPIRES_IN);
 
 // register new user
 const register = async (req, res) => {
@@ -25,53 +26,44 @@ const register = async (req, res) => {
 };
 
 // login user
+
 const login = async (req, res) => {
   try {
-    // find user by email
     const user = await User.findOne({ username: req.body.username });
     if (!user) {
-      res.status(401).json({ message: 'Invalid email or password' });
+      return res.status(401).json({
+        message: 'Auth failed',
+      });
     }
-    // decrypt password
-    const decryptedPassword = CryptoJS.AES.decrypt(
+    const hashedPassword = CryptoJS.AES.decrypt(
       user.password,
       process.env.PASS_SECRET
     );
-    const OriginalPassword = decryptedPassword.toString(CryptoJS.enc.Utf8);
-
-    // compare password
-    if (OriginalPassword !== req.body.password) {
-      res.status(401).json({ message: 'Invalid email or password' });
+    const Originalpassword = hashedPassword.toString(CryptoJS.enc.Utf8);
+    if (Originalpassword !== req.body.password) {
+      return res.status(401).json({
+        message: 'Invalid password',
+      });
     }
-    // generate token
-    const accesstoken = jwt.sign(
+
+    const accessToken = jwt.sign(
       {
-        _id: user._id,
+        id: user._id,
         isAdmin: user.isAdmin,
       },
       process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN }
+      {
+        expiresIn: process.env.JWT_EXPIRES_IN,
+      }
     );
 
-    // hide password
     const { password, ...others } = user._doc;
 
-    res.status(200).json({ ...others, accesstoken }),
-      {
-        message: 'Logged in successfully',
-        user: user,
-      };
-
-    // // generate token
-    // const token = user.generateAuthToken();
-    // res.status(200).json({
-    //   token,
-    //   user: {
-    //     _id: user._id,
-    //     username: user.username,
-    //     email: user.email,
-    //   },
-    // });
+    res.status(200).json({
+      message: 'Auth successful',
+      accessToken,
+      ...others,
+    });
   } catch (error) {
     res.status(500).json(error);
   }
