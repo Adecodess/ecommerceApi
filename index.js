@@ -14,6 +14,7 @@ dotenv.config();
 //  routes
 const userRoute = require('./routes/user');
 const authRoute = require('./routes/auth');
+const productRoute = require('./routes/product');
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -30,6 +31,7 @@ app.use(express.json());
 //   middleware
 app.use('/api/v1/users', userRoute);
 app.use('/api/v1/auth', authRoute);
+app.use('/api/v1/products', productRoute);
 
 app.listen(process.env.PORT || 8080, () => {
   console.log('server is running');
