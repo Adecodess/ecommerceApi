@@ -29,7 +29,7 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const user = await User.findOne({ username: req.body.username });
+    const user = await User.findOne({ email: req.body.email });
     if (!user) {
       return res.status(401).json({
         message: 'Auth failed',
@@ -53,7 +53,7 @@ const login = async (req, res) => {
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: process.env.JWT_EXPIRES_IN,
+        expiresIn: expiry,
       }
     );
 
