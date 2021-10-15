@@ -23,7 +23,7 @@ router.post('/', verifyTokenAndAdmin, async (req, res) => {
 // put request to update product
 router.put('/:id', verifyTokenAndAdmin, async (req, res) => {
   try {
-    const updatedProduct = await User.findByIdAndUpdate(
+    const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
       {
         $set: req.body,
@@ -55,7 +55,7 @@ router.delete('/:id', verifyTokenAndAdmin, async (req, res) => {
 router.get('/find/:id', async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
-    if (!user) {
+    if (!product) {
       res.status(401).json('product not found');
     }
 
