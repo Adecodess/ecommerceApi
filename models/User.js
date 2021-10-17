@@ -20,6 +20,16 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    status: {
+      type: String,
+      required: true,
+      enum: ['Pending', 'Active'],
+      default: 'Pending',
+    },
+    confirmationCode: {
+      type: String,
+      required: true,
+    },
     isAdmin: { type: Boolean, default: false },
   },
   { timestamps: true }
