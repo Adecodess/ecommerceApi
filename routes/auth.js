@@ -6,6 +6,6 @@ const { register, login, verifyUser } = require('../controllers/auth');
 
 // rroute for register user
 router.post('/register', register);
-router.post('/login', verifyUser, login);
+router.post('/login', login);
 
 module.exports = router;

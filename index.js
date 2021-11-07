@@ -19,8 +19,10 @@ const cartRoute = require('./routes/cart');
 const orderRoute = require('./routes/order');
 const stripeRoute = require('./routes/stripe');
 
+// extra security
 // require cors
 const cors = require('cors');
+const helmet = require('helmet');
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -34,6 +36,7 @@ mongoose
 //
 app.use(express.json());
 app.use(cors());
+app.use(helmet());
 
 //   middleware
 app.use('/api/v1/users', userRoute);
