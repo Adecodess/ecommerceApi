@@ -46,6 +46,10 @@ app.use('/api/v1/carts', cartRoute);
 app.use('/api/v1/orders', orderRoute);
 app.use('/api/v1/checkout', stripeRoute);
 
+app.get('/', (req, res) => {
+  res.status(200).json({ mesage: 'Welcome to the API' });
+});
+
 app.listen(process.env.PORT || 8080, () => {
   console.log('server is running');
 });
