@@ -35,17 +35,17 @@ const login = async (req, res) => {
     !user && res.status(404).json('User not found');
 
     // encrypt password
-    const hashedPassword = CryptoJS.AES.decrypt(
+    const hashedPassword = await CryptoJS.AES.decrypt(
       user.password,
       process.env.PASS_SECRET
     );
 
-    const originalPassword = hashedPassword.toString(CryptoJS.enc.Utf8);
+    const originalPassword = await hashedPassword.toString(CryptoJS.enc.Utf8);
     // check if password is correct
     originalPassword !== req.body.password &&
       res.status(401).json('Wrong Credentials');
 
-    const accessToken = jwt.sign(
+    const accessToken = await jwt.sign(
       {
         id: user._id,
         isAdmin: user.isAdmin,
